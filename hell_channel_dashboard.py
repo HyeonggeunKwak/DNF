@@ -54,7 +54,7 @@ def categorize_channel(name):
 # 정적 JSON 파일로부터 데이터 로드
 def load_cached_data():
     try:
-        url = "https://HyeonggeunKwak.github.io/DNF/dfgear_drop.json"  # 실제 GitHub Pages 주소로 변경 완료
+        url = "https://github.com/HyeonggeunKwak/DNF/dfgear_drop.json"  # 실제 GitHub Pages 주소로 변경 완료
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
