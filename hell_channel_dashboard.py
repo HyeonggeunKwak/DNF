@@ -5,9 +5,11 @@ import requests
 import json
 import os
 from bs4 import BeautifulSoup
+from datetime import datetime
 
-# DFGEAR 실시간 득템 정보 크롤링 함수
-def crawl_dfgear():
+# DFGEAR 실시간 득템 정보 크롤링 함수 및 JSON 저장
+
+def crawl_dfgear_and_save():
     url = "https://dfgear.kr/bbs/board.php?bo_table=drop"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -26,15 +28,19 @@ def crawl_dfgear():
                 gear = cols[1].text.strip()
                 data.append({"채널": channel, "장비": gear, "카테고리": categorize_channel(channel)})
 
-        with open("dfgear_drop.json", "w", encoding="utf-8") as f:
+        # JSON 파일로 저장
+        json_path = "dfgear_drop.json"
+        with open(json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
+        print(f"[자동 저장 완료] {json_path} ({len(data)}건) → {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         return data
     except Exception as e:
         st.warning(f"DFGEAR 접속 실패: {e}")
         return []
 
 # 채널 이름에 따라 카테고리 분류
+
 def categorize_channel(name):
     if "벨마이어" in name:
         return "벨마이어 구역"
@@ -52,9 +58,10 @@ def categorize_channel(name):
         return "기타"
 
 # 정적 JSON 파일로부터 데이터 로드
+
 def load_cached_data():
     try:
-        url = "https://github.com/HyeonggeunKwak/DNF/dfgear_drop.json"  # 실제 GitHub Pages 주소로 변경 완료
+        url = "https://HyeonggeunKwak.github.io/DNF/dfgear_drop.json"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
@@ -63,6 +70,7 @@ def load_cached_data():
         return []
 
 # 득템 상위 채널 정리
+
 def get_hot_channels(data):
     df = pd.DataFrame(data)
     if df.empty:
@@ -95,9 +103,9 @@ st.markdown("""
 
 # 실시간 크롤링 시도
 if st.sidebar.button("DFGEAR에서 실시간 데이터 크롤링"):
-    data = crawl_dfgear()
+    data = crawl_dfgear_and_save()
     if data:
-        st.sidebar.success("실시간 데이터 크롤링 완료!!")
+        st.sidebar.success("실시간 데이터 크롤링 및 저장 완료!!")
 else:
     # 정적 JSON 데이터 로드
     data = load_cached_data()
