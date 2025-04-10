@@ -16,6 +16,8 @@ def categorize_channel(name):
         return "마계 구역"
     elif "중천" in name:
         return "중천 구역"
+    elif "바하이트" in name:
+        return "바하이트 구역"
     else:
         return "기타"
 
@@ -33,7 +35,7 @@ def crawl_dfgear():
     items = soup.select(".wr-list tr")
 
     result = []
-    keywords = ["중천", "마계", "백해", "벨마이어", "지벤"]
+    keywords = ["중천", "마계", "백해", "벨마이어", "지벤", "바하이트"]
 
     for item in items:
         tds = item.select("td")
