@@ -6,6 +6,7 @@ import json
 import os
 from bs4 import BeautifulSoup
 from datetime import datetime
+import subprocess
 
 # DFGEAR 실시간 득템 정보 크롤링 함수 및 JSON 저장
 
@@ -29,18 +30,32 @@ def crawl_dfgear_and_save():
                 data.append({"채널": channel, "장비": gear, "카테고리": categorize_channel(channel)})
 
         # JSON 파일로 저장
-        json_path = "dfgear_drop.json"
+        json_path = "docs/dfgear_drop.json"
+        os.makedirs("docs", exist_ok=True)
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
         print(f"[자동 저장 완료] {json_path} ({len(data)}건) → {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+        # 자동 git 커밋 및 푸시
+        auto_git_push()
+
         return data
     except Exception as e:
         st.warning(f"DFGEAR 접속 실패: {e}")
         return []
 
-# 채널 이름에 따라 카테고리 분류
+# 자동 git 커밋 및 푸시 함수
+def auto_git_push():
+    try:
+        subprocess.run(["git", "add", "docs/dfgear_drop.json"], check=True)
+        subprocess.run(["git", "commit", "-m", "자동 업데이트: dfgear_drop.json"], check=True)
+        subprocess.run(["git", "push"], check=True)
+        print("[Git Push 완료] dfgear_drop.json 업로드 성공!!")
+    except subprocess.CalledProcessError as e:
+        print(f"[Git 오류] 자동 커밋 또는 푸시 실패: {e}")
 
+# 채널 이름에 따라 카테고리 분류
 def categorize_channel(name):
     if "벨마이어" in name:
         return "벨마이어 구역"
@@ -58,10 +73,9 @@ def categorize_channel(name):
         return "기타"
 
 # 정적 JSON 파일로부터 데이터 로드
-
 def load_cached_data():
     try:
-        url = "https://HyeonggeunKwak.github.io/DNF/dfgear_drop.json"
+        url = "https://hyeonggeunkwak.github.io/DNF/dfgear_drop.json"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
@@ -70,7 +84,6 @@ def load_cached_data():
         return []
 
 # 득템 상위 채널 정리
-
 def get_hot_channels(data):
     df = pd.DataFrame(data)
     if df.empty:
