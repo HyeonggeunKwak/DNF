@@ -1,4 +1,4 @@
-// 헬채널 자동 추천 웹 대시보드 (Streamlit)
+# 헬채널 자동 추천 웹 대시보드 (Streamlit)
 import pandas as pd
 import streamlit as st
 
@@ -45,4 +45,4 @@ st.dataframe(result, use_container_width=True)
 
 # 핫한 채널 강조 출력
 top_channel = result.iloc[0]
-st.success(f"\n\n🎯 지금 가장 핫한 채널은 **{top_channel['채널']}** 입니다! 드랍 수: {top_channel['득템 수']}개")
+st.success(f"🎯 지금 가장 핫한 채널은 **{top_channel['채널']}** 입니다! 드랍 수: {top_channel['득템 수']}개")
