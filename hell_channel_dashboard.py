@@ -11,7 +11,7 @@ import subprocess
 # DFGEAR 실시간 득템 정보 크롤링 함수 및 JSON 저장
 
 def crawl_dfgear_and_save():
-    url = "https://dfgear.kr/bbs/board.php?bo_table=drop"
+    url = "https://dfgear.xyz/bbs/board.php?bo_table=drop"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
