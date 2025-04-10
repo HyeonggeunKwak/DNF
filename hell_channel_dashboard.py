@@ -9,7 +9,7 @@ import subprocess
 
 # 던파 아카라이브 실시간 득템 정보 크롤링 함수 및 JSON 저장
 def crawl_dnf_archive_and_save():
-    url = "https://www.dnfarchive.com/board/view/notice"  # 던파 아카라이브 게시판 URL (예시)
+    url = "https://arca.live/b/dunfa"  # 던파 아카라이브 게시판 URL (예시)
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
     }
